@@ -1,6 +1,6 @@
-# Creating an PhpDevCommunity Michel Package
+# Creating an Michel Package
 
-In Michel Framework, you can create packages, which are equivalent to bundles in Symfony. This allows you to organize and share reusable components across different projects. To create an PhpDevCommunity Michel package, you need to implement the `PackageInterface` and define your package's services, parameters, event listeners, routes, and commands.
+In Michel Framework, you can create packages, which are equivalent to bundles in Symfony. This allows you to organize and share reusable components across different projects. To create an Michel package, you need to implement the `PackageInterface` and define your package's services, parameters, event listeners, routes, and commands.
 
 You can install this library via [Composer](https://getcomposer.org/). Ensure your project meets the minimum PHP version requirement of 7.4.
 
@@ -35,7 +35,7 @@ interface PackageInterface
 
 ## Example Package
 
-Here's an example of an PhpDevCommunity Michel package class (`MyCustomPackage`) that implements the `PackageInterface`. This package provides some default definitions, parameters, and commands. Note that this is just an example; you should create your own package based on your project's requirements.
+Here's an example of an  Michel package class (`MyCustomPackage`) that implements the `PackageInterface`. This package provides some default definitions, parameters, and commands. Note that this is just an example; you should create your own package based on your project's requirements.
 
 ```php
 final class MyCustomPackage implements PackageInterface
@@ -106,7 +106,7 @@ If your package includes console commands, list them in the `getCommandSources` 
 
 ## Activating Your Package
 
-To activate your package in an PhpDevCommunity Michel project, you need to modify the `packages.php` file located in the `/config` directory. Add your package class to the list of packages along with the environment(s) where it should be active.
+To activate your package in an Michel project, you need to modify the `packages.php` file located in the `/config` directory. Add your package class to the list of packages along with the environment(s) where it should be active.
 
 ```php
 <?php
@@ -120,4 +120,4 @@ return [
 
 In this example, the `MyCustomPackage` is activated for both the 'dev' and 'prod' environments. You can adjust the list of environments as needed.
 
-By following these steps, you can create and activate your PhpDevCommunity Michel packages to extend the functionality of your projects.
+By following these steps, you can create and activate your Michel packages to extend the functionality of your projects.
