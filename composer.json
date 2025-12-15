@@ -1,0 +1,20 @@
+{
+  "name": "michel/michel-package-starter",
+  "description": "The core interface required for creating and integrating packages into the Michel framework.",
+  "type": "library",
+  "require": {
+    "php": ">=7.4",
+    "psr/container": "^1.0|^2.0"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "F. Michel"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Michel\\Package\\": "src"
+    }
+  }
+}
