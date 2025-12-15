@@ -5,7 +5,7 @@ In Michel Framework, you can create packages, which are equivalent to bundles in
 You can install this library via [Composer](https://getcomposer.org/). Ensure your project meets the minimum PHP version requirement of 7.4.
 
 ```bash
-composer require phpdevcommunity/michel-package-starter
+composer require michel/michel-package-starter
 ```
 
 ## Package Interface
@@ -15,7 +15,7 @@ Start by creating a package class that implements the `PackageInterface`. This i
 ```php
 <?php
 
-namespace PhpDevCommunity\Michel\Package;
+namespace Michel\Package;
 
 interface PackageInterface
 {
