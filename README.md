@@ -1,123 +1,126 @@
-# Creating an Michel Package
+# Michel Package Starter 🚀
 
-In Michel Framework, you can create packages, which are equivalent to bundles in Symfony. This allows you to organize and share reusable components across different projects. To create an Michel package, you need to implement the `PackageInterface` and define your package's services, parameters, event listeners, routes, and commands.
+This package provides the core interfaces needed to create and integrate packages into the **Michel Framework**. 
 
-You can install this library via [Composer](https://getcomposer.org/). Ensure your project meets the minimum PHP version requirement of 7.4.
+A Michel Package is a modular extension that hooks into the core application to register services, routes, commands, and listeners automatically. 
+
+Keep it simple, keep it clean!
+
+---
+
+## 1. Installation
+
+Install the starter via Composer in your package's repository:
 
 ```bash
 composer require michel/michel-package-starter
 ```
 
-## Package Interface
+---
 
-Start by creating a package class that implements the `PackageInterface`. This interface defines the methods you need to implement for your package.
+## 2. The Core: `PackageInterface`
+
+Every package must have a main class that implements `Michel\Package\PackageInterface`. This is where you declare everything your package provides to the framework.
 
 ```php
 <?php
 
-namespace Michel\Package;
+namespace MyCustomPackage;
 
-interface PackageInterface
-{
-    public function getDefinitions(): array;
+use Michel\Package\PackageInterface;
 
-    public function getParameters(): array;
-
-    public function getListeners(): array;
-
-    public function getRoutes(): array;
-    
-    public function getControllerSources(): array;
-
-    public function getCommandSources(): array;
-}
-```
-
-## Example Package
-
-Here's an example of an  Michel package class (`MyCustomPackage`) that implements the `PackageInterface`. This package provides some default definitions, parameters, and commands. Note that this is just an example; you should create your own package based on your project's requirements.
-
-```php
-final class MyCustomPackage implements PackageInterface
+final class MyPackage implements PackageInterface
 {
     public function getDefinitions(): array
     {
-        // Implement your service definitions here
+        // 1. Register services (Dependency Injection)
         return [];
     }
 
     public function getParameters(): array
     {
-        // Define package-specific parameters here
-        return [];
-    }
-
-    public function getListeners(): array
-    {
-        // Specify event listeners provided by your package
+        // 2. Provide default parameters
         return [];
     }
 
     public function getRoutes(): array
     {
-        // Define package-specific routes here
+        // 3. Define manual routes
         return [];
     }
-    
+
     public function getControllerSources(): array
     {
-        // Define package-specific routes here
-        return [];
+        // 4. Register directories to scan for #[Route] attributes
+        return [__DIR__ . '/Controller'];
     }
 
     public function getCommandSources(): array
     {
-        // List console commands provided by your package
+        // 5. Register console commands
+        return [];
+    }
+
+    public function getListeners(): array
+    {
+        // 6. Register event listeners
         return [];
     }
 }
 ```
 
-## Defining Your Package
+---
 
-### Implementing getDefinitions
+## 3. Installation Hook (Optional): `InstallablePackageInterface`
 
-In the `getDefinitions` method, define the services your package provides. You can use the Dependency Injection Container to create and configure these services.
-
-### Implementing getParameters
-
-The `getParameters` method allows you to define parameters specific to your package. These parameters can be customized in the project's configuration.
-
-### Implementing getListeners
-
-If your package includes event listeners, define them in the `getListeners` method.
-
-### Implementing getRoutes
-
-If your package provides routes, specify them in the `getRoutes` method.
-
-### Implementing getControllerSources
-
-If your package provides controllers, specify them in the `getControllerSources` method.
-
-### Implementing getCommandSources
-
-If your package includes console commands, list them in the `getCommandSources` method.
-
-## Activating Your Package
-
-To activate your package in an Michel project, you need to modify the `packages.php` file located in the `/config` directory. Add your package class to the list of packages along with the environment(s) where it should be active.
+If your package needs to perform setup tasks upon installation (like creating required directories, publishing assets, or configuring external resources), you should also implement the `InstallablePackageInterface`.
 
 ```php
 <?php
 
-// /config/packages.php
+namespace MyCustomPackage;
+
+use Michel\Package\InstallablePackageInterface;
+use Michel\Package\PackageInterface;
+use Psr\Container\ContainerInterface;
+
+final class MyPackage implements PackageInterface, InstallablePackageInterface
+{
+    // ... PackageInterface methods ...
+
+    public function install(ContainerInterface $container, ?callable $output = null): void
+    {
+        $sessionDir = $container->get('michel.project_dir') . '/var/session';
+        
+        if (!is_dir($sessionDir)) {
+            mkdir($sessionDir, 0755, true);
+            if ($output) {
+                $output('    ✔ Created: /var/session');
+            }
+        } else {
+            if ($output) {
+                $output('    – Already exists: /var/session');
+            }
+        }
+    }
+}
+```
+
+> **Note:** The `install()` method is triggered automatically by the framework when users run `composer require`, `composer install`, or manually via `php bin/michel package:init`. Always ensure your installation logic is **idempotent** (safe to execute multiple times).
+
+---
+
+## 4. Activation
+
+To activate the package in a Michel project, the user simply adds it to their `config/packages.php` file, along with the environments where it should run:
+
+```php
+<?php
+// config/packages.php
 
 return [
-    MyCustomPackage::class => ['dev', 'prod'],
+    \MyCustomPackage\MyPackage::class => ['dev', 'prod'],
 ];
 ```
 
-In this example, the `MyCustomPackage` is activated for both the 'dev' and 'prod' environments. You can adjust the list of environments as needed.
-
-By following these steps, you can create and activate your Michel packages to extend the functionality of your projects.
+You are good to go!
